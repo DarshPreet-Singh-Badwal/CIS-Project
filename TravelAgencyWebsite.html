@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyRoam Travel Agency</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef4ff;
+      --text: #183153;
+      --muted: #5d6b82;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #14b8a6;
+      --danger: #dc2626;
+      --border: #d9e2f2;
+      --shadow: 0 10px 30px rgba(24, 49, 83, 0.10);
+      --radius: 20px;
+      --radius-sm: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 30%),
+        radial-gradient(circle at top right, rgba(20, 184, 166, 0.10), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      background: rgba(245, 247, 251, 0.85);
+      border-bottom: 1px solid rgba(217, 226, 242, 0.9);
+    }
+
+    .topbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      font-size: 1.1rem;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-btn, .ghost-btn, .primary-btn, .chip, .mini-btn, .chat-link {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .nav-btn:hover, .ghost-btn:hover, .primary-btn:hover, .chip:hover, .mini-btn:hover, .chat-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+    }
+
+    .hero-card, .panel, .section-card, .booking-card, .summary-card, .info-card, .chat-panel {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(217, 226, 242, 0.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 30px;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(20,184,166,0.24), transparent 65%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    h1, h2, h3 { margin: 0 0 10px; }
+    h1 { font-size: clamp(2rem, 4vw, 3.8rem); line-height: 1.05; }
+    p { margin: 0 0 12px; color: var(--muted); }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .primary-btn:hover { background: var(--primary-dark); }
+
+    .ghost-btn {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 20px;
+    }
+
+    .info-card {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+      position: relative;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      color: var(--primary-dark);
+    }
+
+    main {
+      max-width: 1200px;
+      width: 100%;
+      margin: 20px auto 40px;
+      padding: 0 20px;
+      flex: 1;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .section-card, .panel, .booking-card, .summary-card, .chat-panel {
+      padding: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .searchbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font: inherit;
+      background: white;
+      color: var(--text);
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    label {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      background: #eef4ff;
+      color: var(--primary-dark);
+      padding: 10px 14px;
+      border: 1px solid #d7e4ff;
+      position: relative;
+    }
+
+    .chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .deal-card, .result-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(24,49,83,0.06);
+    }
+
+    .deal-img {
+      height: 145px;
+      background: linear-gradient(135deg, #dbeafe, #c7f9f1);
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      font-size: 2.1rem;
+    }
+
+    .deal-content, .result-content {
+      padding: 16px;
+    }
+
+    .price {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .small {
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fbfdff;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex: 0 0 auto;
+    }
+
+    .booking-form, .enquiry-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .message {
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      display: none;
+      font-weight: 600;
+    }
+
+    .message.show { display: block; }
+    .message.success { background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0; }
+    .message.info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .message.warning { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+
+    .progress {
+      height: 10px;
+      background: #e8eef8;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: inherit;
+      transition: width .22s ease;
+    }
+
+    .drawer {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f8fbff;
+      border: 1px dashed #bfd2f0;
+      margin-top: 12px;
+    }
+
+    .drawer.open { display: block; }
+
+    .footer-note {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      padding: 0 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Searchable autocomplete */
+    .autocomplete {
+      position: relative;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 100%;
+      max-height: 260px;
+      overflow: auto;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      z-index: 12;
+      display: none;
+    }
+
+    .suggestions.show { display: block; }
+
+    .suggestion {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font: inherit;
+    }
+
+    .suggestion:hover, .suggestion.active {
+      background: #eff6ff;
+    }
+
+    .suggestion small {
+      color: var(--muted);
+    }
+
+    /* HCI hover reveal */
+    [data-hci] {
+  position: relative;
+  overflow: visible;
+}
+
+[data-hci]:hover::after,
+[data-hci]:focus-visible::after {
+  content: attr(data-hci);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* CHANGED HERE */
+  top: calc(100% + 10px);
+  bottom: auto;
+
+  background: #0f172a;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+  pointer-events: none;
+}
+
+[data-hci]:hover::before,
+[data-hci]:focus-visible::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* CHANGED HERE */
+  top: calc(100% + 2px);
+  bottom: auto;
+
+  border: 7px solid transparent;
+
+  /* CHANGED HERE */
+  border-bottom-color: #0f172a;
+  border-top-color: transparent;
+
+  z-index: 9999;
+  pointer-events: none;
+}
+
+    /* Chatbot */
+    .chat-launcher {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 16px;
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.30);
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .chatbot {
+      position: fixed;
+      right: 20px;
+      bottom: 82px;
+      width: min(380px, calc(100vw - 40px));
+      max-height: 70vh;
+      display: none;
+      z-index: 40;
+    }
+
+    .chatbot.open { display: block; }
+
+    .chat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .chat-body {
+      display: grid;
+      gap: 12px;
+      max-height: 58vh;
+      overflow: auto;
+    }
+
+    .chat-faqs {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chat-link {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: 14px;
+    }
+
+    .chat-link:hover {
+      background: #eff6ff;
+    }
+
+    .chat-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .faq-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .faq-q {
+      width: 100%;
+      padding: 12px 14px;
+      border: 0;
+      background: #fff;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 14px 12px;
+      color: var(--muted);
+    }
+
+    .faq-box.open .faq-a { display: block; }
+
+    .record-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .audio-preview {
+      display: none;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .audio-preview.show { display: block; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .contact-card {
+      display: grid;
+      gap: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .contact-row:last-child { border-bottom: 0; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #eef4ff;
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .faq-links {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 1040px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 980px) {
+      .hero, .grid-2, .grid-3, .card-list { grid-template-columns: 1fr; }
+      .searchbar { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .searchbar, .field-grid { grid-template-columns: 1fr; }
+      .hero-card { padding: 22px; }
+      .section-head { flex-direction: column; }
+      .stats { grid-template-columns: 1fr; }
+      .chatbot { bottom: 90px; right: 12px; width: calc(100vw - 24px); }
+      .chat-launcher { right: 12px; bottom: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="topbar">
+        <a href="#home" class="brand-link" id="brandHome" data-hci="Home navigation: clear affordance and user control.">
+          <div class="logo">✈</div>
+          <div>
+            SkyRoam <span class="small" style="display:block; font-weight:600;">Travel Agency</span>
+          </div>
+        </a>
+        <nav aria-label="Primary navigation">
+          <button class="nav-btn active" data-page="home" data-hci="Consistency and visibility: the same navigation pattern throughout.">Home</button>
+          <button class="nav-btn" data-page="explore" data-hci="Recognition over recall: browse options instead of remembering commands.">Explore</button>
+          <button class="nav-btn" data-page="book" data-hci="Error prevention: guided form entry with feedback.">Book Trip</button>
+          <button class="nav-btn" data-page="itinerary" data-hci="Progressive disclosure: extra details appear only when requested.">My Itinerary</button>
+          <button class="nav-btn" data-page="support" data-hci="Help and documentation: support information is easy to find.">Support</button>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="home-hero">
+      <div class="hero-card">
+        <div>
+          <div class="eyebrow" data-hci="Visibility of system status: the design makes the purpose obvious.">Travel made simple</div>
+          <h1>Book travel with clear feedback, simple navigation, and friendly guidance.</h1>
+          <p>
+            This shows HCI principles in action through navigation, form interaction,
+            tooltips, visual feedback, and a chatbot with support links.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-btn" onclick="goTo('book')" data-hci="Primary action: clear affordance and strong visibility.">Start Booking</button>
+            <button class="ghost-btn" onclick="goTo('explore')" data-hci="Secondary action: consistent but less dominant.">Browse Destinations</button>
+          </div>
+        </div>
+        <div class="chips" aria-label="Interface feature hints">
+          <span class="chip" data-hci="Hover reveal: feedback appears when the user explores the interface.">Hover hints</span>
+          <span class="chip" data-hci="Consistency: buttons and cards keep the same look.">Consistency</span>
+          <span class="chip" data-hci="Visibility: important actions remain easy to notice.">Visibility</span>
+          <span class="chip" data-hci="Error prevention: forms and input choices are guided.">Guidance</span>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="info-card">
+          <h2>Quick Interaction Summary</h2>
+          <p>Users can search trips, open menus, fill forms, send voice-note inquiries, and see immediate responses without a database.</p>
+          <div class="stats">
+            <div class="stat"><strong>5</strong> Main pages</div>
+            <div class="stat"><strong>100%</strong> Client-side</div>
+            <div class="stat"><strong>Live</strong> Feedback</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <h2>How to use it</h2>
+          <p>Click the logo or Home to return to the main page. Hover over small elements to reveal the HCI idea behind them.</p>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section class="page active" id="page-home">
+        <div class="grid-2">
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Find a Trip</h2>
+                <p>Search fields use autocomplete so the user can choose a city easily and type with less effort.</p>
+              </div>
+              <button class="ghost-btn" id="toggleHelp" data-hci="Supportive guidance: optional help is available on demand.">Show help</button>
+            </div>
+
+            <div class="searchbar" role="search" aria-label="Trip search form">
+              <div class="autocomplete">
+                <label for="from">From</label>
+                <input id="from" list="citiesFrom" placeholder="Type a city" autocomplete="off" />
+                <div class="suggestions" id="fromSuggestions" aria-label="From city suggestions"></div>
+              </div>
+              <div class="autocomplete">
+                <label for="to">To</label>
+                <input id="to" list="citiesTo" placeholder="Type a city" autocomplete="off" />
+                <div class="suggestions" id="toSuggestions" aria-label="Destination city suggestions"></div>
+              </div>
+              <div>
+                <label for="date">Date</label>
+                <input id="date" type="date" />
+              </div>
+              <div style="display:flex; align-items:flex-end;">
+                <button class="primary-btn" id="searchBtn" data-hci="System feedback: search results update right away.">Search</button>
+              </div>
+            </div>
+
+            <div class="drawer" id="helpBox">
+              Tip: start typing a city in either box. A filtered list appears and you can select from it.
+            </div>
+
+            <div class="message info" id="searchMsg"></div>
+            <div id="searchResults" class="card-list" aria-live="polite"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Visual behaviour</h2>
+                <p>Hover over the small cues around the interface to see the principle used there.</p>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="timeline-item"><div class="dot"></div><div><strong>Immediate feedback:</strong> buttons and inputs respond instantly.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Simple navigation:</strong> page switching happens without reloading.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Recognition:</strong> large visible options are easier than memory-based commands.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Consistency:</strong> the design language stays the same in every section.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-explore">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h2>Explore Destinations</h2>
+              <p>Filter buttons help the user narrow options and reduce search effort.</p>
+            </div>
+            <button class="ghost-btn" id="resetExplore" data-hci="Recovery and control: users can easily reset the view.">Reset filters</button>
+          </div>
+
+          <div class="chips" role="toolbar" aria-label="Destination filters">
+            <button class="chip filter active" data-filter="all">All</button>
+            <button class="chip filter" data-filter="beach">Beach</button>
+            <button class="chip filter" data-filter="city">City</button>
+            <button class="chip filter" data-filter="nature">Nature</button>
+            <button class="chip filter" data-filter="budget">Budget</button>
+          </div>
+
+          <div class="card-list" id="destinationCards"></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-book">
+        <div class="grid-2">
+          <div class="booking-card">
+            <div class="section-head">
+              <div>
+                <h2>Book Trip</h2>
+                <p>The form gives visible feedback, completion progress, and validation messages.</p>
+              </div>
+            </div>
+
+            <form class="booking-form" id="bookingForm" novalidate>
+              <div class="field-grid">
+                <div>
+                  <label for="fullName">Full name</label>
+                  <input id="fullName" placeholder="Your name" data-hci="Clear labeling reduces memory load." />
+                </div>
+                <div>
+                  <label for="email">Email</label>
+                  <input id="email" type="email" placeholder="name@example.com" data-hci="Input constraints help prevent errors." />
+                </div>
+                <div>
+                  <label for="travelType">Travel type</label>
+                  <select id="travelType" data-hci="Recognizable choices support faster decisions.">
+                    <option value="">Select one</option>
+                    <option>Solo</option>
+                    <option>Family</option>
+                    <option>Business</option>
+                    <option>Couple</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="travelers">Travelers</label>
+                  <select id="travelers" data-hci="Simple options improve learnability.">
+                    <option value="">Select one</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4+</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="classType">Class</label>
+                  <select id="classType" data-hci="Visible categories help recognition over recall.">
+                    <option value="">Select one</option>
+                    <option>Economy</option>
+                    <option>Premium Economy</option>
+                    <option>Business</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="budget">Budget per person</label>
+                  <input id="budget" type="range" min="300" max="5000" step="100" value="1500" data-hci="Continuous feedback: the value updates as the slider moves." />
+                  <div class="small">Selected budget: <span id="budgetValue">$1500</span></div>
+                </div>
+                <div class="full">
+                  <label for="notes">Special requests</label>
+                  <textarea id="notes" rows="4" placeholder="Wheelchair access, window seat, vegetarian meal..." data-hci="Optional input keeps the interface flexible."></textarea>
+                </div>
+              </div>
+
+              <div>
+                <div class="small">Completion</div>
+                <div class="progress"><div id="progressBar"></div></div>
+              </div>
+
+              <div class="hero-actions">
+                <button type="submit" class="primary-btn" data-hci="Primary action stands out for easy selection.">Submit Booking Request</button>
+                <button type="button" class="ghost-btn" id="fillDemo" data-hci="User control: auto-fill lets the user explore safely.">Auto-fill demo</button>
+                <button type="button" class="ghost-btn" id="clearForm" data-hci="Error recovery: the form can be cleared instantly.">Clear</button>
+              </div>
+            </form>
+
+            <div class="message success" id="bookingMsg"></div>
+            <div class="message warning" id="bookingWarn"></div>
+          </div>
+
+          <div class="summary-card">
+            <h2>Instant Response</h2>
+            <p>Every action produces visible change to help the user feel in control.</p>
+            <div class="timeline" style="margin-top:16px;">
+              <div class="timeline-item"><div class="dot"></div><div><strong>Input feedback:</strong> the budget value updates immediately.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Error handling:</strong> missing fields are flagged before submission.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Recovery:</strong> demo fill and clear actions help experimentation.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Visibility:</strong> progress bar shows completion status.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-itinerary">
+        <div class="grid-2">
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>My Itinerary</h2>
+                <p>Trip details can be expanded only when the user asks for them.</p>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="dot"></div>
+                <div>
+                  <strong>Day 1: Flight</strong>
+                  <div class="small">Leave Vancouver at 09:30 and arrive in Tokyo in the evening.</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="dot"></div>
+                <div>
+                  <strong>Day 2: Hotel check-in</strong>
+                  <div class="small">Room confirmed. View details are available using the button below.</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="dot"></div>
+                <div>
+                  <strong>Day 3: City tour</strong>
+                  <div class="small">Select a tour time and receive a visual confirmation.</div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-actions" style="margin-top:16px;">
+              <button class="primary-btn" id="toggleItinerary" data-hci="Progressive disclosure reveals additional information only on demand.">Toggle trip details</button>
+            </div>
+            <div class="drawer" id="itineraryDetails">
+              Additional details: airport transfer, meal preference, and emergency contact can be reviewed here.
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2>Interface behaviour</h2>
+            <p>Hover over controls to see the idea used in each place. The concept is hidden until needed.</p>
+            <div class="timeline">
+              <div class="timeline-item"><div class="dot"></div><div><strong>Affordance:</strong> clickable items look clickable.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Consistency:</strong> the same layout and styling repeat across pages.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Help:</strong> supporting guidance is available without cluttering the screen.</div></div>
+              <div class="timeline-item"><div class="dot"></div><div><strong>Accessibility:</strong> readable contrast and large touch targets help users.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-support">
+        <div class="contact-grid">
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Company Contact & Support</h2>
+                <p>Fake contact details are included so this feels complete.</p>
+              </div>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-row">
+                <strong>Company</strong>
+                <span>SkyRoam Travel Agency</span>
+              </div>
+              <div class="contact-row">
+                <strong>Phone</strong>
+                <span><a href="tel:+16045550128">+1 (604) 555-0128</a></span>
+              </div>
+              <div class="contact-row">
+                <strong>Email</strong>
+                <span><a href="mailto:support@skyroamtravel.example">support@skyroamtravel.example</a></span>
+              </div>
+              <div class="contact-row">
+                <strong>Sales</strong>
+                <span><a href="mailto:bookings@skyroamtravel.example">bookings@skyroamtravel.example</a></span>
+              </div>
+              <div class="contact-row">
+                <strong>Business hours</strong>
+                <span>Mon–Fri: 9:00 AM – 6:00 PM<br />Sat: 10:00 AM – 4:00 PM<br />Sun: Closed</span>
+              </div>
+            </div>
+
+            <div class="faq-links" id="supportFaqLinks">
+              <a class="chat-link" href="#faq-booking">How do I change a booking?</a>
+              <a class="chat-link" href="#faq-refund">How do refunds work?</a>
+              <a class="chat-link" href="#faq-baggage">What about baggage rules?</a>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Enquiry Section</h2>
+                <p>Write an enquiry or attach a voice note if you cannot call.</p>
+              </div>
+            </div>
+
+            <form class="enquiry-form" id="enquiryForm">
+              <div class="field-grid">
+                <div>
+                  <label for="enqName">Name</label>
+                  <input id="enqName" placeholder="Your name" />
+                </div>
+                <div>
+                  <label for="enqEmail">Email</label>
+                  <input id="enqEmail" type="email" placeholder="name@example.com" />
+                </div>
+              </div>
+              <div>
+                <label for="enqSubject">Subject</label>
+                <input id="enqSubject" placeholder="Booking, refund, destination, etc." />
+              </div>
+              <div>
+                <label for="enqMessage">Write your enquiry</label>
+                <textarea id="enqMessage" rows="5" placeholder="Type your question here..."></textarea>
+              </div>
+              <div>
+                <label for="voiceNote">Voice note (upload an audio file)</label>
+                <input id="voiceNote" type="file" accept="audio/*" />
+                <div class="small" id="voiceFileName">No voice note selected.</div>
+              </div>
+              <div>
+                <label>Quick record</label>
+                <div class="record-actions">
+                  <button type="button" class="mini-btn primary-btn" id="recordBtn">Start recording</button>
+                  <button type="button" class="mini-btn ghost-btn" id="stopBtn" disabled>Stop</button>
+                </div>
+                <audio id="audioPreview" class="audio-preview" controls></audio>
+                <div class="small" id="recordStatus">Recording is optional. If the browser blocks it, uploading an audio file still works.</div>
+              </div>
+              <div class="hero-actions">
+                <button type="submit" class="primary-btn">Send enquiry</button>
+                <button type="reset" class="ghost-btn">Clear</button>
+              </div>
+            </form>
+            <div class="message success" id="enquiryMsg"></div>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-top:20px;" id="faq-booking">
+          <div class="section-head">
+            <div>
+              <h2>FAQ</h2>
+              <p>Useful answers with working links inside the chatbot and support section.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="faq-box" id="faq-refund">
+              <button class="faq-q">How do refunds work?</button>
+              <div class="faq-a">Refund requests can be submitted through support. In this, the response is shown instantly without a real payment system.</div>
+            </div>
+            <div class="faq-box" id="faq-baggage">
+              <button class="faq-q">What about baggage rules?</button>
+              <div class="faq-a">Baggage rules depend on the airline, route, and travel class. The support area gives a quick summary and a contact path.</div>
+            </div>
+            <div class="faq-box" id="faq-change">
+              <button class="faq-q">How do I change a booking?</button>
+              <div class="faq-a">Open My Itinerary, then use the trip details button to review or update information.</div>
+            </div>
+            <div class="faq-box" id="faq-contact">
+              <button class="faq-q">How can I contact the company?</button>
+              <div class="faq-a">Use the phone or email listed in Support, or send a written enquiry with an optional voice note.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <button class="chat-launcher" id="chatLauncher" aria-label="Open chat bot" data-hci="Help and documentation: support is one click away.">
+    💬 Chat
+  </button>
+
+  <div class="chatbot" id="chatbot">
+    <div class="chat-panel">
+      <div class="chat-head">
+        <strong>SkyRoam Chat Assistant</strong>
+        <button class="ghost-btn" id="closeChat" style="padding:10px 12px;">Close</button>
+      </div>
+      <div class="chat-body">
+        <div class="chat-note">Ask a common question or use the links below to move around the website.</div>
+        <div class="chat-faqs">
+          <div class="faq-box open">
+            <button class="faq-q">How do I book a trip?</button>
+            <div class="faq-a">Go to Book Trip and fill the form. The system shows progress and validation.</div>
+          </div>
+          <div class="faq-box">
+            <button class="faq-q">Can I contact support?</button>
+            <div class="faq-a">Yes. Open Support for phone, email, business hours, enquiry form, and voice note upload.</div>
+          </div>
+          <div class="faq-box">
+            <button class="faq-q">Where can I see destinations?</button>
+            <div class="faq-a">Use Explore to filter beaches, cities, nature trips, and budget options.</div>
+          </div>
+        </div>
+        <div class="faq-links">
+          <a class="chat-link" href="#page-book" data-jump="book">Go to Book Trip</a>
+          <a class="chat-link" href="#page-support" data-jump="support">Go to Support</a>
+          <a class="chat-link" href="#page-explore" data-jump="explore">Go to Explore</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const homeHero = document.getElementById('home-hero');
+
+    function goTo(page) {
+      pages.forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
+      homeHero.style.display = page === 'home' ? 'grid' : 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navButtons.forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.page)));
+    document.getElementById('brandHome').addEventListener('click', (e) => {
+      e.preventDefault();
+      goTo('home');
+    });
+
+    // Large world city directory for searchable dropdowns
+    const worldCities = [
+      ['Amsterdam','Netherlands'], ['Athens','Greece'], ['Auckland','New Zealand'], ['Bangkok','Thailand'], ['Barcelona','Spain'],
+      ['Beijing','China'], ['Belgrade','Serbia'], ['Berlin','Germany'], ['Bogotá','Colombia'], ['Boston','USA'],
+      ['Brisbane','Australia'], ['Brussels','Belgium'], ['Budapest','Hungary'], ['Buenos Aires','Argentina'], ['Cairo','Egypt'],
+      ['Cape Town','South Africa'], ['Caracas','Venezuela'], ['Casablanca','Morocco'], ['Chicago','USA'], ['Copenhagen','Denmark'],
+      ['Dallas','USA'], ['Delhi','India'], ['Doha','Qatar'], ['Dubai','UAE'], ['Dublin','Ireland'],
+      ['Edinburgh','UK'], ['Frankfurt','Germany'], ['Geneva','Switzerland'], ['Hanoi','Vietnam'], ['Helsinki','Finland'],
+      ['Hong Kong','China'], ['Istanbul','Turkey'], ['Jakarta','Indonesia'], ['Johannesburg','South Africa'], ['Kuala Lumpur','Malaysia'],
+      ['Kyoto','Japan'], ['Lagos','Nigeria'], ['Las Vegas','USA'], ['Lisbon','Portugal'], ['London','UK'],
+      ['Los Angeles','USA'], ['Madrid','Spain'], ['Manila','Philippines'], ['Melbourne','Australia'], ['Mexico City','Mexico'],
+      ['Miami','USA'], ['Milan','Italy'], ['Montreal','Canada'], ['Moscow','Russia'], ['Mumbai','India'],
+      ['Munich','Germany'], ['Nairobi','Kenya'], ['New Delhi','India'], ['New York','USA'], ['Osaka','Japan'],
+      ['Oslo','Norway'], ['Paris','France'], ['Prague','Czech Republic'], ['Reykjavik','Iceland'], ['Rome','Italy'],
+      ['San Francisco','USA'], ['Santiago','Chile'], ['Seoul','South Korea'], ['Shanghai','China'], ['Singapore','Singapore'],
+      ['Stockholm','Sweden'], ['Sydney','Australia'], ['Taipei','Taiwan'], ['Tallinn','Estonia'], ['Tehran','Iran'],
+      ['Tokyo','Japan'], ['Toronto','Canada'], ['Vancouver','Canada'], ['Vienna','Austria'], ['Warsaw','Poland'],
+      ['Zurich','Switzerland'], ['Adelaide','Australia'], ['Abu Dhabi','UAE'], ['Addis Ababa','Ethiopia'], ['Alexandria','Egypt'],
+      ['Anchorage','USA'], ['Antwerp','Belgium'], ['Asunción','Paraguay'], ['Austin','USA'], ['Baku','Azerbaijan'],
+      ['Bangalore','India'], ['Belfast','UK'], ['Bergen','Norway'], ['Birmingham','UK'], ['Bordeaux','France'],
+      ['Bratislava','Slovakia'], ['Bristol','UK'], ['Calgary','Canada'], ['Canberra','Australia'], ['Cardiff','UK'],
+      ['Colombo','Sri Lanka'], ['Curitiba','Brazil'], ['Da Nang','Vietnam'], ['Durban','South Africa'], ['Florence','Italy'],
+      ['Guangzhou','China'], ['Hamburg','Germany'], ['Ho Chi Minh City','Vietnam'], ['Houston','USA'], ['Jakarta','Indonesia'],
+      ['Jerusalem','Israel'], ['Kigali','Rwanda'], ['Lima','Peru'], ['Lyon','France'], ['Manchester','UK'],
+      ['Marseille','France'], ['Nassau','Bahamas'], ['Nice','France'], ['Panama City','Panama'], ['Perth','Australia'],
+      ['Porto','Portugal'], ['Quito','Ecuador'], ['Riga','Latvia'], ['Rio de Janeiro','Brazil'], ['Riyadh','Saudi Arabia'],
+      ['Salzburg','Austria'], ['Sarajevo','Bosnia and Herzegovina'], ['Seattle','USA'], ['Sofia','Bulgaria'], ['Split','Croatia'],
+      ['St. Petersburg','Russia'], ['Stuttgart','Germany'], ['Tbilisi','Georgia'], ['Thessaloniki','Greece'], ['Valencia','Spain'],
+      ['Vilnius','Lithuania'], ['Wellington','New Zealand'], ['Zagreb','Croatia']
+    ].map(([city, country]) => ({ city, country, label: `${city}, ${country}` }));
+
+    function makeAutocomplete(inputEl, panelEl) {
+      let activeIndex = -1;
+      const state = { selected: '' };
+
+      function renderSuggestions(query = '') {
+        const q = query.trim().toLowerCase();
+        const matches = worldCities
+          .filter(item => !q || item.label.toLowerCase().includes(q) || item.city.toLowerCase().startsWith(q))
+          .slice(0, 10);
+
+        panelEl.innerHTML = matches.map((item, idx) => `
+          <button type="button" class="suggestion" data-index="${idx}" data-value="${item.label}">
+            <span>${item.city}</span><small>${item.country}</small>
+          </button>
+        `).join('');
+        panelEl.classList.toggle('show', matches.length > 0);
+        activeIndex = -1;
+      }
+
+      inputEl.addEventListener('input', () => {
+        state.selected = '';
+        renderSuggestions(inputEl.value);
+      });
+
+      inputEl.addEventListener('focus', () => renderSuggestions(inputEl.value));
+
+      inputEl.addEventListener('keydown', (e) => {
+        const options = [...panelEl.querySelectorAll('.suggestion')];
+        if (!panelEl.classList.contains('show') && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+          renderSuggestions(inputEl.value);
+          return;
+        }
+        if (!options.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = Math.min(activeIndex + 1, options.length - 1);
+          options.forEach((opt, idx) => opt.classList.toggle('active', idx === activeIndex));
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = Math.max(activeIndex - 1, 0);
+          options.forEach((opt, idx) => opt.classList.toggle('active', idx === activeIndex));
+        } else if (e.key === 'Enter') {
+          if (activeIndex >= 0 && options[activeIndex]) {
+            e.preventDefault();
+            options[activeIndex].click();
+          }
+        } else if (e.key === 'Escape') {
+          panelEl.classList.remove('show');
+        }
+      });
+
+      panelEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.suggestion');
+        if (!btn) return;
+        inputEl.value = btn.dataset.value;
+        state.selected = btn.dataset.value;
+        panelEl.classList.remove('show');
+        inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!panelEl.contains(e.target) && e.target !== inputEl) {
+          panelEl.classList.remove('show');
+        }
+      });
+
+      return {
+        getValue: () => state.selected || inputEl.value.trim(),
+        clear: () => { inputEl.value = ''; state.selected = ''; panelEl.innerHTML = ''; panelEl.classList.remove('show'); }
+      };
+    }
+
+    const fromPicker = makeAutocomplete(document.getElementById('from'), document.getElementById('fromSuggestions'));
+    const toPicker = makeAutocomplete(document.getElementById('to'), document.getElementById('toSuggestions'));
+
+    // Home search interaction
+    const searchBtn = document.getElementById('searchBtn');
+    const searchMsg = document.getElementById('searchMsg');
+    const searchResults = document.getElementById('searchResults');
+    const quickTrips = [
+      { emoji: '🏝️', title: 'Bali Escape', price: '$1,250', meta: 'Beach • 6 nights' },
+      { emoji: '🏙️', title: 'Tokyo Explorer', price: '$1,980', meta: 'City • 5 nights' },
+      { emoji: '🏔️', title: 'Banff Adventure', price: '$740', meta: 'Nature • 3 nights' },
+    ];
+
+    function renderSearchResults(results = quickTrips) {
+      searchResults.innerHTML = results.map(t => `
+        <article class="result-card">
+          <div class="deal-img">${t.emoji}</div>
+          <div class="result-content">
+            <strong>${t.title}</strong>
+            <div class="small">${t.meta}</div>
+            <div class="price" style="margin-top:8px;">${t.price}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+    renderSearchResults();
+
+    searchBtn.addEventListener('click', () => {
+      const from = fromPicker.getValue();
+      const to = toPicker.getValue();
+      const date = document.getElementById('date').value;
+      if (!to) {
+        searchMsg.className = 'message warning show';
+        searchMsg.textContent = 'Please enter a destination city to search.';
+        return;
+      }
+      searchMsg.className = 'message info show';
+      searchMsg.textContent = `Searching trips${from ? ` from ${from}` : ''} to ${to}${date ? ` on ${date}` : ''}. Results updated below.`;
+      renderSearchResults([
+        { emoji: '✈️', title: `${to} Express`, price: date ? 'Available on selected date' : 'Flexible dates available', meta: 'Instant mock result based on your input' },
+        { emoji: '🧭', title: 'Custom Package', price: 'Best value', meta: 'Hotel + flight + support' }
+      ]);
+    });
+
+    document.getElementById('toggleHelp').addEventListener('click', () => {
+      document.getElementById('helpBox').classList.toggle('open');
+      document.getElementById('toggleHelp').textContent = document.getElementById('helpBox').classList.contains('open') ? 'Hide help' : 'Show help';
+    });
+
+    // Explore cards and filters
+    const destinations = [
+      { title: 'Maldives', tag: 'beach', emoji: '🏖️', desc: 'Relaxing island holiday', price: '$2,450' },
+      { title: 'Paris', tag: 'city', emoji: '🗼', desc: 'Culture, food, and museums', price: '$1,690' },
+      { title: 'Reykjavik', tag: 'nature', emoji: '❄️', desc: 'Northern lights and scenery', price: '$2,100' },
+      { title: 'Hanoi', tag: 'budget', emoji: '🚲', desc: 'Low-cost city break', price: '$850' },
+      { title: 'Cancun', tag: 'beach', emoji: '🌴', desc: 'Sun and seaside resort', price: '$1,420' },
+      { title: 'Singapore', tag: 'city', emoji: '🌆', desc: 'Clean, modern, and lively', price: '$1,880' },
+    ];
+
+    const destinationCards = document.getElementById('destinationCards');
+    function showDestinations(filter = 'all') {
+      const items = destinations.filter(d => filter === 'all' || d.tag === filter);
+      destinationCards.innerHTML = items.map(d => `
+        <article class="deal-card">
+          <div class="deal-img">${d.emoji}</div>
+          <div class="deal-content">
+            <strong>${d.title}</strong>
+            <div class="small">${d.desc}</div>
+            <div class="price" style="margin-top:8px;">${d.price}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+    showDestinations();
+
+    document.querySelectorAll('.filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showDestinations(btn.dataset.filter);
+      });
+    });
+
+    document.getElementById('resetExplore').addEventListener('click', () => {
+      document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter[data-filter="all"]').classList.add('active');
+      showDestinations('all');
+    });
+
+    // Booking form interactions
+    const budget = document.getElementById('budget');
+    const budgetValue = document.getElementById('budgetValue');
+    const progressBar = document.getElementById('progressBar');
+    const bookingMsg = document.getElementById('bookingMsg');
+    const bookingWarn = document.getElementById('bookingWarn');
+    const bookingForm = document.getElementById('bookingForm');
+
+    function updateBudget() {
+      budgetValue.textContent = `$${budget.value}`;
+    }
+    budget.addEventListener('input', updateBudget);
+    updateBudget();
+
+    function updateProgress() {
+      const fields = ['fullName', 'email', 'travelType', 'travelers', 'classType', 'notes'];
+      const filled = fields.filter(id => document.getElementById(id).value.trim().length > 0).length;
+      const pct = Math.round((filled / fields.length) * 100);
+      progressBar.style.width = `${pct}%`;
+    }
+    ['fullName', 'email', 'travelType', 'travelers', 'classType', 'notes'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateProgress);
+      document.getElementById(id).addEventListener('change', updateProgress);
+    });
+    updateProgress();
+
+    document.getElementById('fillDemo').addEventListener('click', () => {
+      fullName.value = 'Darsh Patel';
+      email.value = 'darsh@example.com';
+      travelType.value = 'Family';
+      travelers.value = '3';
+      classType.value = 'Economy';
+      notes.value = 'Need airport pickup and vegetarian meal.';
+      budget.value = 1800;
+      updateBudget();
+      updateProgress();
+      bookingWarn.className = 'message warning show';
+      bookingWarn.textContent = 'Demo data filled. Review and submit the request to see confirmation feedback.';
+      bookingMsg.className = 'message success';
+      bookingMsg.textContent = '';
+    });
+
+    document.getElementById('clearForm').addEventListener('click', () => {
+      bookingForm.reset();
+      budget.value = 1500;
+      updateBudget();
+      updateProgress();
+      bookingWarn.className = 'message warning';
+      bookingWarn.textContent = '';
+      bookingMsg.className = 'message success';
+      bookingMsg.textContent = '';
+      fromPicker.clear();
+      toPicker.clear();
+    });
+
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const required = [fullName, email, travelType, travelers, classType];
+      const missing = required.filter(el => !el.value.trim());
+      if (missing.length) {
+        bookingWarn.className = 'message warning show';
+        bookingWarn.textContent = 'Please complete all required fields before submitting.';
+        bookingMsg.className = 'message success';
+        bookingMsg.textContent = '';
+        missing[0].focus();
+        return;
+      }
+      bookingWarn.className = 'message warning';
+      bookingWarn.textContent = '';
+      bookingMsg.className = 'message success show';
+      bookingMsg.textContent = `Booking request received for ${fullName.value}. You will get a confirmation email at ${email.value}.`;
+    });
+
+    // Itinerary panel toggle
+    document.getElementById('toggleItinerary').addEventListener('click', () => {
+      document.getElementById('itineraryDetails').classList.toggle('open');
+    });
+
+    // Support + enquiry
+    const enquiryForm = document.getElementById('enquiryForm');
+    const enquiryMsg = document.getElementById('enquiryMsg');
+    const voiceNote = document.getElementById('voiceNote');
+    const voiceFileName = document.getElementById('voiceFileName');
+    const recordBtn = document.getElementById('recordBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const audioPreview = document.getElementById('audioPreview');
+    const recordStatus = document.getElementById('recordStatus');
+    let recorder = null;
+    let recordedChunks = [];
+    let recordedBlobUrl = '';
+
+    voiceNote.addEventListener('change', () => {
+      const file = voiceNote.files[0];
+      voiceFileName.textContent = file ? `Selected file: ${file.name}` : 'No voice note selected.';
+    });
+
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      recordBtn.disabled = true;
+      recordBtn.textContent = 'Recording unavailable';
+      recordStatus.textContent = 'This browser does not support in-browser recording here, but uploading an audio file still works.';
+    }
+
+    recordBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recordedChunks = [];
+        recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = e => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+        recorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+          if (recordedBlobUrl) URL.revokeObjectURL(recordedBlobUrl);
+          recordedBlobUrl = URL.createObjectURL(blob);
+          audioPreview.src = recordedBlobUrl;
+          audioPreview.classList.add('show');
+          recordStatus.textContent = 'Recording ready. You can play it back before sending the enquiry.';
+        };
+        recorder.start();
+        recordBtn.disabled = true;
+        stopBtn.disabled = false;
+        recordStatus.textContent = 'Recording… click Stop when finished.';
+      } catch (err) {
+        recordStatus.textContent = 'Recording could not start in this browser. Please upload an audio file instead.';
+      }
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (recorder && recorder.state !== 'inactive') {
+        recorder.stop();
+      }
+      recordBtn.disabled = false;
+      stopBtn.disabled = true;
+    });
+
+    enquiryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('enqName').value.trim();
+      const email = document.getElementById('enqEmail').value.trim();
+      const subject = document.getElementById('enqSubject').value.trim();
+      const message = document.getElementById('enqMessage').value.trim();
+      if (!name || !email || !subject || !message) {
+        enquiryMsg.className = 'message warning show';
+        enquiryMsg.textContent = 'Please fill in your name, email, subject, and enquiry message.';
+        return;
+      }
+      enquiryMsg.className = 'message success show';
+      enquiryMsg.textContent = 'Your enquiry has been prepared locally. In a real system it would be sent to the travel agency.';
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-box').forEach(box => {
+      const btn = box.querySelector('.faq-q');
+      btn.addEventListener('click', () => box.classList.toggle('open'));
+    });
+
+    // Chatbot
+    const chatbot = document.getElementById('chatbot');
+    document.getElementById('chatLauncher').addEventListener('click', () => chatbot.classList.toggle('open'));
+    document.getElementById('closeChat').addEventListener('click', () => chatbot.classList.remove('open'));
+    document.querySelectorAll('[data-jump]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const page = link.dataset.jump;
+        if (page) {
+          e.preventDefault();
+          chatbot.classList.remove('open');
+          goTo(page);
+        }
+      });
+    });
+
+    // Make Home visible on load
+    goTo('home');
+  </script>
+</body>
+</html>
